@@ -125,6 +125,7 @@ Module.register("MMM-Powerwall", {
 		}
 
 		setInterval(function() {
+			self.Log("Timer fired");
 			self.checkTimeouts();
 			self.advanceToNextVehicle();
 		}, 20000);
