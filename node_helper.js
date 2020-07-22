@@ -652,7 +652,8 @@ module.exports = NodeHelper.create({
 
 	doTeslaApiGetVehicleList: async function(username) {
 		url = "https://owner-api.teslamotors.com/api/1/vehicles";
-		let response = await this.doTeslaApi(url, username);
+		//let response = await this.doTeslaApi(url, username);
+		let response = [];
 		
 		// response is an array of vehicle objects.  Don't need all the properties.
 		if( Array.isArray(response) ) {

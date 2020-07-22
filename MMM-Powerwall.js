@@ -545,19 +545,28 @@ Module.register("MMM-Powerwall", {
 		if( !this.suspended ) {
 			this.timeouts[name].handle = setTimeout(() => func(), delay);
 		}
+		else {
+			this.log("Skipping timeout \"" + name + "\" because module is suspended");
+		}
 	},
 
 	checkTimeouts: function() {
-		for( let name in this.timeouts ) {
-			if( !this.suspended && Date.now() - this.timeouts[name].target > 5000 ) {
-				this.timeouts[name].func();
-				this.timeouts[name].target = Date.now();
+		if( !this.suspended ) {
+			for( let name in this.timeouts ) {
+				if( Date.now() - this.timeouts[name].target > 5000 ) {
+					this.timeouts[name].func();
+					this.timeouts[name].target = Date.now();
+				}
 			}
+		}
+		else {
+			this.log("Skipping timeout check because module is suspended");
 		}
 	},
 
 	suspend: function() {
 		this.suspended = true;
+		this.log("MMM-Powerwall is suspended");
 		for( let name in this.timeouts ) {
 			clearTimeout(this.timeouts[name].handle)
 		}
@@ -565,6 +574,7 @@ Module.register("MMM-Powerwall", {
 
 	resume: function() {
 		this.suspended = false;
+		this.log("MMM-Powerwall is no longer suspended");
 		this.checkTimeouts();
 	},
 
@@ -1035,6 +1045,8 @@ Module.register("MMM-Powerwall", {
 			}
 		}
 		if( notification === "USER_PRESENCE" ) {
+			let sender = sender || "System";
+			this.log("Received USER_PRESENCE notification from " + sender + ": " + payload);
 			if( payload ) {
 				this.resume();
 			}
