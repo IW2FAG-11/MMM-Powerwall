@@ -1055,6 +1055,9 @@ Module.register("MMM-Powerwall", {
 				this.suspend();
 			}
 		}
+		if( notification === "CLOCK_SECOND" && payload % 5 === 0 ) {
+			this.checkTimeouts();
+		}
 	},
 
 	dayNumber: -1,
